@@ -1,0 +1,90 @@
+
+##### 1
+mv *.zip ~/.kaggle/backup-kaggle
+
+# Diabetes dataset
+mv /home/smithb23/.kaggle/kaggle-datasets/diabetes-prediction-dataset/diabetes_prediction_dataset.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# Cancer dataset
+mv "/home/smithb23/.kaggle/kaggle-datasets/cancer-patients-and-air-pollution-a-new-link/cancer patients and air pollution a new link.csv" /home/smithb23/.kaggle/kaggle-datasets/
+mv 'cancer patient data sets.csv' 'cancer_patient_data_sets.csv'
+mv /home/smithb23/.kaggle/kaggle-datasets/cancer-patients-and-air-pollution-a-new-link/cancer_patient_data_sets.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# Heart disease
+mv /home/smithb23/.kaggle/kaggle-datasets/heart-disease-prediction/Heart_Disease_Prediction.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# Housing data
+mv /home/smithb23/.kaggle/kaggle-datasets/housing-price-prediction/Housing.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# Used cars
+mv /home/smithb23/.kaggle/kaggle-datasets/used-car-price-prediction/car_web_scraped_dataset.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# Customer segmentation
+mv /home/smithb23/.kaggle/kaggle-datasets/customer-segmentation-tutorial-in-python/Mall_Customers.csv /home/smithb23/.kaggle/kaggle-datasets/
+
+# University ranking
+mv "/home/smithb23/.kaggle/kaggle-datasets/world-all-university-ranking-factors/world all university rank and rank score.csv" /home/smithb23/.kaggle/kaggle-datasets/
+mv "world all university rank and rank score.csv" world_all_university_rank_and_rank_score.csv
+
+rmdir cancer-patients-and-air-pollution-a-new-link
+rmdir diabetes-prediction-dataset
+rmdir heart-disease-prediction
+rmdir housing-price-prediction
+rmdir used-car-price-prediction
+rmdir customer-segmentation-tutorial-in-python
+rmdir world-all-university-ranking-factors
+
+
+##### 2
+head -n 1 diabetes_prediction_dataset.csv > part1.csv
+head -n 1 diabetes_prediction_dataset.csv > part2.csv
+head -n 1 diabetes_prediction_dataset.csv > part3.csv
+
+total_lines=$(wc -l < diabetes_prediction_dataset.csv)
+data_lines=$((total_lines - 1))
+part_size=$((data_lines / 3))
+
+tail -n +2 diabetes_prediction_dataset.csv | head -n $part_size >> part1.csv
+tail -n +$((part_size + 2)) diabetes_prediction_dataset.csv | head -n $part_size >> part2.csv
+tail -n +$((2 * part_size + 2)) diabetes_prediction_dataset.csv >> part3.csv
+
+
+##### 3
+head -n 1 Heart_Disease_Prediction.csv > absence.csv
+head -n 1 Heart_Disease_Prediction.csv > presence.csv
+grep "Absence" Heart_Disease_Prediction.csv >> absence.csv
+grep "Presence" Heart_Disease_Prediction.csv >> presence.csv
+
+
+##### 4
+# Count with "no accidents"
+grep -i "No accidents" car_web_scraped_dataset.csv | wc -l
+
+# Total cars (excluding header)
+tail -n +2 car_web_scraped_dataset.csv | wc -l
+
+# Decimal result
+echo "2223 / 2840" | bc -l
+
+
+##### 5
+sed -e 's/\byes\b/1/g' \
+    -e 's/\bno\b/0/g' \
+    -e 's/\bunfurnished\b/0/g' \
+    -e 's/\bfurnished\b/1/g' \
+    -e 's/\bsemi-furnished\b/2/g' \
+    Housing.csv > Housing_cleaned.csv
+
+
+##### 6
+cut -d ',' -f 2- Mall_Customers.csv > Mall_Customers_noID.csv
+
+##### 7
+tail -n +2 world_all_university_rank_and_rank_score.csv | \
+cut -d ',' -f5-8 | \
+sed 's/–/-/g; s/—/-/g; s/“//g; s/”//g; s/‘//g; s/’//g' | \
+awk -F',' '{sum = $1 + $2 + $3 + $4; printf "%.1f\n", sum}' > sums.txt
+
+##### 8
+{ head -n 1 cancer_patient_data_sets.csv && \
+  tail -n +2 cancer_patient_data_sets.csv | sort -t ',' -k3 -n; } > cancer_sorted.csv
