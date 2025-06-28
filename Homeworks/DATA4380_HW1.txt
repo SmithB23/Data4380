@@ -1,4 +1,4 @@
-
+Used ChatGPT to help sort everything and often to resolve errors
 ##### 1
 mv *.zip ~/.kaggle/backup-kaggle
 
